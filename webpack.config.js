@@ -1,7 +1,7 @@
 var path = require("path");
 
 module.exports = {
-  entry: ['./src/index.ts', './src/parser.ts'],
+  entry: ['./src/dependencies.ts', './src/index.ts', './src/parser.ts'],
   module: {
     rules: [
       {
@@ -17,6 +17,6 @@ module.exports = {
   output: {
     filename: "code.js",
     globalObject: 'this',
-    path: path.resolve(__dirname, "dist")
+    path: path.resolve(__dirname)
   }
 };

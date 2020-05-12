@@ -1,17 +1,10 @@
-// const NodeSubject = new Subject();
+// @ts-ignore
+const __parser__dep = global.__DEPENDENCIES__;
 
-// const RectangeNodeSubject = NodeSubject.pipe(filter(() => true), tap(() => {
-
-// }));
-
-// const HierarchySubject = new BehaviorSubject([])
-
-// interface INode {
-
-// }
-
-// const generate = (hierarchy: IHierarchy) => {
-//   return '';
-// }
-
-console.warn('test');
+const sub = new __parser__dep.Subject('test') as Subject<{}>;
+sub.subscribe(console.warn);
+sub.next('test test test');
+sub.unsubscribe();
+sub.next('test test test');
+sub.subscribe(console.warn);
+sub.next('test test test');
