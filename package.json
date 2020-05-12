@@ -9,6 +9,9 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "@figma/plugin-typings": "^1.15.0"
+    "@figma/plugin-typings": "^1.15.0",
+    "@reactivex/rxjs": "^6.5.5",
+    "rx": "^4.1.0",
+    "rxjs": "^6.5.5"
   }
 }

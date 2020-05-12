@@ -11,6 +11,38 @@ figma.showUI(__html__);
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
+
+const generateCSS = (x: number, y: number, width: number, height: number, color: { r: number, g: number, b: number}) => {
+  const { r, g, b } = color || {};
+  return `
+  display: flex;
+  position: absolute;
+  width: ${width}px;
+  height: ${height}px;
+  left: ${x}px;
+  top: ${y}px;
+  background: rgb(${Math.round(r*255)},${Math.round(g*255)},${Math.round(b*255)});
+  `
+}
+
+const generate = () => {  
+  for (const item of figma.currentPage.selection) {
+    if (item.type !== "FRAME") return;
+    for (const node of item.children) {
+      if (node.type === "RECTANGLE") {
+        const test = node.fills[0];
+        let color = { r: 0, g: 0, b: 0 };
+        if (test.type === 'SOLID') {
+          color = test.color
+        }
+        return `<div style="${generateCSS(node.x, node.y, node.width, node.height, color)}"></div>`
+      }
+    }
+  }
+}
+
+console.warn(generate());
+
 figma.ui.onmessage = msg => {
   // One way of distinguishing between different types of messages sent from
   // your HTML page is to use an object with a "type" property like this.
