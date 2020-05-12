@@ -7,16 +7,16 @@
 
 // This shows the HTML page in "ui.html".
 
-// @ts-ignore
-global.TEST = {
-  test: () => console.warn('check')
-}
-
-figma.showUI(__html__);
-
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
+
+// @ts-ignore
+const _ = global.__DEPENDENCIES__;
+
+const NodeSubject__index = new _.Subject<[BaseNode, BaseNode]>('node');
+const OnLoadSubject__index = new _.Subject<{}>('load') as Subject<{}>;
+const OnUnsubscribeSubject__index = new _.Subject<{}>('unsubscribe') as Subject<{}>;
 
 const generateCSS = (x: number, y: number, width: number, height: number, color: { r: number, g: number, b: number}) => {
   const { r, g, b } = color || {};
@@ -40,13 +40,22 @@ const recursive = (node: BaseNode, cb: (parent: BaseNode, child: BaseNode) => vo
   }
 }
 
-// const NodeSubject = new Subject<[BaseNode, BaseNode]>()
-
 const generate = () => {  
   const selection = figma?.currentPage?.selection;
   if (!selection) return;
-  recursive(selection[0] as unknown as BaseNode, console.warn)
+  recursive(selection[0] as unknown as BaseNode, (parent, child) => {
+    NodeSubject__index.next([parent, child]);
+  })
 }
 
-// NodeSubject.subscribe(console.warn);
-generate();
+OnLoadSubject__index.subscribe(() => {
+  generate();
+  OnUnsubscribeSubject__index.next({});
+})
+
+OnUnsubscribeSubject__index.subscribe(() => {
+  OnLoadSubject__index.unsubscribe();
+  NodeSubject__index.unsubscribe();
+  OnUnsubscribeSubject__index.unsubscribe();
+  figma.closePlugin();
+})
