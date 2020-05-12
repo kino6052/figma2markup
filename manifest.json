@@ -1,0 +1,7 @@
+{
+  "name": "Figma2Markup",
+  "id": "841828235675143264",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html"
+}
