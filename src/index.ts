@@ -6,6 +6,7 @@
 // full browser environment (see documentation).
 
 // This shows the HTML page in "ui.html".
+
 figma.showUI(__html__);
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
@@ -25,23 +26,25 @@ const generateCSS = (x: number, y: number, width: number, height: number, color:
   `
 }
 
-const generate = () => {  
-  for (const item of figma.currentPage.selection) {
-    if (item.type !== "FRAME") return;
-    for (const node of item.children) {
-      if (node.type === "RECTANGLE") {
-        const test = node.fills[0];
-        let color = { r: 0, g: 0, b: 0 };
-        if (test.type === 'SOLID') {
-          color = test.color
-        }
-        return `<div style="${generateCSS(node.x, node.y, node.width, node.height, color)}"></div>`
-      }
-    }
+const recursive = (node: BaseNode, cb: (parent: BaseNode, child: BaseNode) => void) => {
+  let __node = node as ChildrenMixin;
+  if (!__node || !__node.children) return;
+  for (const child of __node.children) {
+    cb(__node as BaseNode, child as BaseNode);
+    recursive(child as BaseNode, cb);
   }
 }
 
-console.warn(generate());
+// const NodeSubject = new Subject<[BaseNode, BaseNode]>()
+
+const generate = () => {  
+  const selection = figma?.currentPage?.selection;
+  if (!selection) return;
+  recursive(selection[0] as unknown as BaseNode, console.warn)
+}
+
+// NodeSubject.subscribe(console.warn);
+generate();
 
 figma.ui.onmessage = msg => {
   // One way of distinguishing between different types of messages sent from

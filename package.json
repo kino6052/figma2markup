@@ -4,14 +4,17 @@
   "description": "Your Figma Plugin",
   "main": "code.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "npx webpack-cli --config ./webpack.config.js"
   },
   "author": "",
   "license": "",
   "dependencies": {
     "@figma/plugin-typings": "^1.15.0",
     "@reactivex/rxjs": "^6.5.5",
-    "rx": "^4.1.0",
-    "rxjs": "^6.5.5"
+    "ts-loader": "^7.0.4",
+    "typescript": "^3.8.3",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-concat-plugin": "^3.0.0"
   }
 }
